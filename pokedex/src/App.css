@@ -1,0 +1,18 @@
+*{
+  box-sizing: border-box;
+}
+
+.landing{
+  background-image:url('NoDBimages/landing-background');
+}
+.App {
+  text-align: center;
+}
+
+.body > div{
+height: 1000px;
+}
+
+.body{
+  height: 5000px;
+}
