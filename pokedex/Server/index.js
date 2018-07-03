@@ -9,7 +9,9 @@ app.get('/api/pokemon_power_value', (req, res) => {
     res.status(200).json(value);
 })
 
-app.get('/api/get_all_pokemon',cC.read);
-app.post('/api/add_pokemon',cC.create) 
 
+app.get('/api/get_all_pokemon',cC.read);
+app.post('/api/add_pokemon',cC.create); 
+app.put('/api/train_pokemon/:id', cC.update);
+app.delete('/api/remove_pokemon/:id', cC.delete);
 app.listen(4000, ()=> console.log('server running on port 4000'));

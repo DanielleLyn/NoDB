@@ -1,7 +1,14 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Title from './title.js';
+import ScrollUp from './scroll-up.js';
 import axios from 'axios';
+import pokeball from './backgrounds/pokeball.png';
+import plus from './backgrounds/plus.svg';
+import group from './backgrounds/group.svg';
+// import group from './group.svg';
+import  CreateBattleGroup from './createBattleGroup.js';
 import './App.css';
+
 
 
 
@@ -11,8 +18,9 @@ class App extends Component {
     super()
     this.state={
       pokemon:[],
-      level: [],
+      level: '',
       myParty: [],
+      battleGroup: []
     }
   }
   
@@ -56,47 +64,43 @@ class App extends Component {
       })
     })
 
-    // this.setState({
-    //   myParty: [...this.state.myParty,{
-    //     name: this.state.pokemon,
-    //     level: this.state.level}]
-    // })
   }
   
-  train = () =>{
-
-  }
-  // updatePrice(priceChange, id) {
-  //   // axios (PUT)
-  //   axios.put(`${baseUrl}/vehicles/${id}/${priceChange}`).then
-  // (response => {
-  //   this.setState({
-  //     vehiclesToDisplay: response.data.vehicles
-  //   });
-  //   this.setState({
-  //     vehiclesToDisplay: response.data.vehicles
-  //   });
-
-  delete = () => {
-
+  train = (id) =>{
+    axios.put(`/api/train_pokemon/${id}`) 
+    .then(response => {
+      console.log('---',response.data);
+      this.setState({
+        myParty: response.data
+      })
+    })
   }
 
-  // sellCar(id) {
-  //   // axios (DELETE)
-  //   axios.delete(`${baseUrl}/vehicles/${id}`).then(response =>
-  //   {
-  //     this.setState({
-  //       vehiclesToDisplay: response.data.vehicles
-  //     });
-  //   })
-  //   // setState with response -> vehiclesToDisplay
-  // }
 
-  createBattleGroup = (myParty) =>{
-    //.map 
-    // return 6 highest value pokemon
+  delete = (id) => {
+    axios.delete(`/api/remove_pokemon/${id}`)
+    .then(response => {
+      this.setState({
+        myParty:response.data
+      })
+    })
   }
 
+  createBattleGroup = () =>{
+
+    let myBattleGroup = [...this.state.myParty].sort((a,b) => {
+      return b.level - a.level;
+  });
+    console.log('battlegroup sorted', myBattleGroup)
+
+    
+   let newBattleGroup = myBattleGroup.splice(0, 5)
+  
+
+   this.setState({
+     battleGroup: newBattleGroup
+   })
+  }
 
 
   render() {
@@ -104,46 +108,93 @@ class App extends Component {
     let level = this.state.level
     console.log(this.state.myParty)
     const party = this.state.myParty.map((e,i) =>{
-      return <div key={i}>
+      return <div key={e.id}>
         <p>Name: {e.name} </p>
-        <p>Value:{e.level}</p> 
+        <p>Value:{e.level}</p>
+        <button onClick={()=> this.train(e.id)}>Train</button> 
+        <button onClick={()=> this.delete(e.id)}>Delete</button>
         </div>
-      
     })
+    const battleGroup = this.state.battleGroup.map((e,i) =>{
+      return <div key={e.id}>
+       <p>Name: {e.name} </p>
+        <p>Value:{e.level}</p>
+        </div>
+    })
+
+
+
     return (
-     <div className="App">
+      
+      <div className="App">
      <div className="body">
         <div className="landing">
-        landing
+        <Title />
         </div>
         <div className="wild">
-        wild
-        {this.state.pokemon}, {this.state.level}
-       <button onClick={()=> this.getRandomPokemon()}>get pokemon</button>
-       <button onClick={()=> this.addToParty()}>add to party</button>
+        <div className='pokeball4'>
+            <img onClick={()=> this.getRandomPokemon()} src={pokeball} />
+          </div>
+          <div className="button1">
+          {this.state.pokemon} {this.state.level}
+           <div className='pokeball4'>
+             <img onClick={()=> this.addToParty()} src={plus} />
+           </div>
+          </div>
+          <div className="button2">
+          <div className='pokeball4'>
+            <img onClick={()=> this.getRandomPokemon()} src={pokeball} />
+          </div>
+          </div>
+          <div className="button3">
+          <div className='pokeball4'>
+            <img onClick={()=> this.getRandomPokemon()} src={pokeball} />
+          </div>
+          </div>
+          <div className="button4">
+          <div className='pokeball4'>
+            <img onClick={()=> this.getRandomPokemon()} src={pokeball} />
+          </div>
+          </div>
+          {/* <div className='pokeball4'>
+            <img onClick={()=> this.getRandomPokemon()} src={pokeball} />
+          </div> */}
         </div>
         <div className="party">
-        party
+        
+          <div className="battleButton">
+
+          </div>
+          <div className="groupDiv">
+            My Party:
         {party}
+         </div>
         </div>
         <div className="battleGroup">
-        battlegroup
+          <div className="empty">
+          </div>
+           <div className="showGroup">
+          {battleGroup}
+          </div>
+          <div className="createGroup">
+           {/* np/> */}
+           <div className='pokeball4'>
+<img onClick={()=> this.createBattleGroup()} src={group} />
+</div>
+          </div>
         </div>
         <div className="footer">
-        footer
+      <ScrollUp style={{width: 75}} ToggledStyle={{right: 100}}/>
         </div>
       </div>
       </div>
     );
+  
   }
 }
 
-
-      // {this.state.pokemon}, {this.state.level}
-      //  <button onClick={()=> this.getRandomPokemon()}>get pokemon</button>
-      //  <button onClick={()=> this.addToParty()}>add to party</button>
-      //  {party}
-       /* <button onClick={()=> this.train()}>train</button> */
-    
+<div className='pokeball4'>
+<img onClick={()=> this.createBattleGroup()} src={group} />
+</div>
 
 export default App;
